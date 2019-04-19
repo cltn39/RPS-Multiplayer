@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css?family=Luckiest+Guy');
+body{
+    background-image: url('https://mdbootstrap.com/img/Photos/Others/img%20%2848%29.jpg'); 
+    background-repeat: no-repeat; 
+    background-size: cover; 
+}
+.bg {
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTckZAJuPjylvx4qpa0oUmlAVBW_G074g5BQcqSS79w1W6yOLVyiw");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+.jumbotron {
+    background-image: url(../image/rpsbg1.jpg);
+    height: 100%;
+    background-position: 0rem -16rem;
+    background-repeat: no-repeat;
+    color: white;
+}
+h5{
+    color: rgb(255, 255, 255);
+    text-shadow: 2px 2px rgb(15, 15, 15);
+    font-family: 'Luckiest Guy', cursive;
+}
