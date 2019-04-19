@@ -64,16 +64,16 @@ database.ref("/player2Info").on("value", function (snapshot) {
     if (snapshot.child("p2Name").exists()) {
 
         // Set the local variables for player 1 info equal to the stored values in firebase.
-        p1Name = snapshot.val().p1Name;
-        p1Win = parseInt(snapshot.val().p1Win);
+        p2Name = snapshot.val().p2Name;
+        p2Win = parseInt(snapshot.val().p2Win);
 
         // change the HTML to reflect the newly updated local values (most recent information from firebase)
-        $("#p2NameIs").text(snapshot.val().p1Name);
-        $("#p2WinIs").text(snapshot.val().p1Win);
+        $("#p2NameIs").text(snapshot.val().p2Name);
+        $("#p2WinIs").text(snapshot.val().p2Win);
 
         // Print the local data to the console.
-        console.log(snapshot.val().p1Name);
-        console.log(snapshot.val().p1Win);
+        console.log(snapshot.val().p2Name);
+        console.log(snapshot.val().p2Win);
     }
 
     // Else Firebase doesn't have a player 1 info, so use the initial local values.
@@ -112,10 +112,35 @@ $("#submit-p1").on("click", function (event) {
     p1Win = parseInt(snapshot.val().p1Win);
 
     // Change the HTML to reflect the new high price and bidder
-    $("#p2NameIs").text(p1Name);
-    $("#p2WinIs").text(p1Win);
+    $("#p1NameIs").text(p1Name);
+    $("#p1WinIs").text(p1Win);
 
     $("#p1Id-input").val("");
+});
+
+$("#submit-p2").on("click", function (event) {
+    event.preventDefault();
+
+    // Get the input values
+    p2NameInput = $("#p2Id-input").val().trim();
+    // Save the new data in Firebase
+    database.ref("/player2Info").set({
+        p2Name: p2NameInput,
+    });
+
+    // Log the new High Price
+    console.log("New player 2 has entered the arena!");
+    console.log(p1Name);
+
+    // Store the new high price and bidder name as a local variable (could have also used the Firebase variable)
+    p2Name = snapshot.val().p2Name;
+    p2Win = parseInt(snapshot.val().p2Win);
+
+    // Change the HTML to reflect the new high price and bidder
+    $("#p2NameIs").text(p2Name);
+    $("#p2WinIs").text(p2Win);
+
+    $("#p2Id-input").val("");
 });
 
 
