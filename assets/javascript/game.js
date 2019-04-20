@@ -194,7 +194,7 @@ $(".btn-secondary").on("click", function (event) {
     }
     //display RPS imgs to represnt choices
     if (userGuess === "r") {
-        $("#playerOneRpsImg").append(`<img src="./assets/image/rock.png" style="width: 7rem">`);
+        $("#playerOneRpsImg").append(`<img src="./assets/image/rock.png" style="width: 7rem; -webkit-transform: scaleX(-1); transform: scaleX(-1)">`);
     }
     if (userGuess === "p") {
         $("#playerOneRpsImg").append(`<img src="./assets/image/paper.png" style="width: 7rem">`);
@@ -206,10 +206,10 @@ $(".btn-secondary").on("click", function (event) {
         $("#playerTwoRpsImg").append(`<img src="./assets/image/rock.png" style="width: 7rem">`);
     }
     if (computerGuess === "p") {
-        $("#playerTwoRpsImg").append(`<img src="./assets/image/paper.png" style="width: 7rem">`);
+        $("#playerTwoRpsImg").append(`<img src="./assets/image/paper.png" style="width: 7rem; -webkit-transform: scaleX(-1); transform: scaleX(-1)">`);
     }
     if (computerGuess === "s") {
-        $("#playerTwoRpsImg").append(`<img src="./assets/image/sissor.png" style="width: 7rem">`);
+        $("#playerTwoRpsImg").append(`<img src="./assets/image/sissor.png" style="width: 7rem; -webkit-transform: scaleX(-1); transform: scaleX(-1)">`);
     }
     
 });
