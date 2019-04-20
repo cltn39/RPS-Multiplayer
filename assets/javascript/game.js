@@ -16,9 +16,9 @@ var database = firebase.database();
 var computerChoices = ["r", "p", "s"];
 
 //initial values
-const initialWins = 0;
-const initialLosses = 0;
-const initialTies = 0;
+let initialWins = 0;
+let initialLosses = 0;
+let initialTies = 0;
 let p1Name = "Rockonly360noScope"
 let p1Win = initialWins;
 let p2Name = "NoobWith2fingers"
@@ -103,15 +103,14 @@ $("#submit-p1").on("click", function (event) {
         p1Name: p1NameInput,
     });
 
-    // Log the new High Price
+    // Log the new p1 name
     console.log("New player 1 has entered the arena!");
     console.log(p1Name);
 
-    // Store the new high price and bidder name as a local variable (could have also used the Firebase variable)
-    p1Name = snapshot.val().p1Name;
-    p1Win = parseInt(snapshot.val().p1Win);
+    // Store the new name as a local variable (could have also used the Firebase variable)
+    p1Name = p1NameInput;
 
-    // Change the HTML to reflect the new high price and bidder
+    // Change the HTML to reflect the new data
     $("#p1NameIs").text(p1Name);
     $("#p1WinIs").text(p1Win);
 
@@ -128,27 +127,19 @@ $("#submit-p2").on("click", function (event) {
         p2Name: p2NameInput,
     });
 
-    // Log the new High Price
+    // Log the new player enter
     console.log("New player 2 has entered the arena!");
     console.log(p1Name);
 
-    // Store the new high price and bidder name as a local variable (could have also used the Firebase variable)
-    p2Name = snapshot.val().p2Name;
-    p2Win = parseInt(snapshot.val().p2Win);
+    // Store the new name as a local variable (could have also used the Firebase variable)
+    p2Name = p2NameInput;
 
-    // Change the HTML to reflect the new high price and bidder
+    // Change the HTML to reflect the new data
     $("#p2NameIs").text(p2Name);
     $("#p2WinIs").text(p2Win);
 
     $("#p2Id-input").val("");
 });
-
-
-
-
-
-
-
 
 // Create variables that hold references to the places in the HTML where we want to display things.
 var directionsText = document.getElementById("directions-text");
@@ -173,11 +164,11 @@ document.onkeyup = function (event) {
         if ((userGuess === "r" && computerGuess === "s") ||
             (userGuess === "s" && computerGuess === "p") ||
             (userGuess === "p" && computerGuess === "r")) {
-            wins++;
+            initialWins++;
         } else if (userGuess === computerGuess) {
-            ties++;
+            initialTies++;
         } else {
-            losses++;
+            initialLosses++;
         }
 
         // Hide the directions
@@ -186,8 +177,7 @@ document.onkeyup = function (event) {
         // Display the user and computer guesses, and wins/losses/ties.
         userChoiceText.textContent = "P1=" + userGuess;
         computerChoiceText.textContent = "P2=" + computerGuess;
-        winsText.textContent = wins;
-        lossesText.textContent = losses;
-        tiesText.textContent = ties;
+        p1WinIs.textContent = initialWins;
+        p2WinIs.textContent = initialLosses;
     }
 };
