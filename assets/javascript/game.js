@@ -178,12 +178,14 @@ $(".btn-secondary").on("click", function (event) {
         userChoiceText.textContent = "P1=" + userGuess;
         computerChoiceText.textContent = "P2=" + computerGuess;
         //store wins for each players into firebase
-        database.ref("/player1Info").set({
+        database.ref("/player1WinInfo").set({
+            
             p1Win: initialWins
         });
         
         p2NameInput = $("#p2Id-input").val().trim();
-        database.ref("/player2Info").set({
+        database.ref("/player2WinInfo").set({
+           
             p2Win: initialLosses
         });
         //locally store and display win count 
