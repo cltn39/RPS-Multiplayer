@@ -175,8 +175,8 @@ $(".btn-secondary").on("click", function (event) {
         directionsText.textContent = "2 people are currently watching your match! Don't let them down!";
 
         // Display the user and computer guesses, and wins/losses/ties.
-        userChoiceText.textContent = "P1=" + userGuess;
-        computerChoiceText.textContent = "P2=" + computerGuess;
+        // userChoiceText.textContent = "P1=" + userGuess;
+        // computerChoiceText.textContent = "P2=" + computerGuess;
         //store wins for each players into firebase
         database.ref("/player1WinInfo").set({
             
