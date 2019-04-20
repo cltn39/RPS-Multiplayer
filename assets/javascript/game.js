@@ -1,5 +1,5 @@
 // Initialize Firebase
-var config = {
+const config = {
     apiKey: "AIzaSyBVm0go9PSlCykzEZDF2y2EOAGIzTeBlOo",
     authDomain: "rps-multiplayer-fd7e2.firebaseapp.com",
     databaseURL: "https://rps-multiplayer-fd7e2.firebaseio.com",
@@ -10,10 +10,10 @@ var config = {
 firebase.initializeApp(config);
 
 // Create a variable to reference the database.
-var database = firebase.database();
+const database = firebase.database();
 
 // Creates an array that lists out all of the options (Rock, Paper, or Scissors).
-var computerChoices = ["r", "p", "s"];
+const computerChoices = ["r", "p", "s"];
 
 //initial values
 let initialWins = 0;
@@ -27,7 +27,7 @@ let p2Win = initialWins;
 //firewatcher
 database.ref("/player1Info").on("value", function (snapshot) {
     // If Firebase has a p1Name and p1Win stored (first case)
-    if (snapshot.child("p1Name").exists() ) {
+    if (snapshot.child("p1Name").exists()) {
 
         // Set the local variables for player 1 info equal to the stored values in firebase.
         p1Name = snapshot.val().p1Name;
@@ -61,7 +61,7 @@ database.ref("/player1Info").on("value", function (snapshot) {
 //firewatcher
 database.ref("/player2Info").on("value", function (snapshot) {
     // If Firebase has a p1Name and p1Win stored (first case)
-    if (snapshot.child("p2Name").exists() ) {
+    if (snapshot.child("p2Name").exists()) {
 
         // Set the local variables for player 1 info equal to the stored values in firebase.
         p2Name = snapshot.val().p2Name;
@@ -141,22 +141,22 @@ $("#submit-p2").on("click", function (event) {
 });
 
 // Create variables that hold references to the places in the HTML where we want to display things.
-var directionsText = document.getElementById("directions-text");
-var userChoiceText = document.getElementById("userchoice-text");
-var computerChoiceText = document.getElementById("computerchoice-text");
-var winsText = document.getElementById("wins-text");
-var lossesText = document.getElementById("losses-text");
-var tiesText = document.getElementById("ties-text");
+const directionsText = document.getElementById("directions-text");
+const userChoiceText = document.getElementById("userchoice-text");
+const computerChoiceText = document.getElementById("computerchoice-text");
+const winsText = document.getElementById("wins-text");
+const lossesText = document.getElementById("losses-text");
+const tiesText = document.getElementById("ties-text");
 
 // This function is run whenever the user presses a key.
-$(".btn-secondary").on("click",function (event) {
+$(".btn-secondary").on("click", function (event) {
 
-    // Determines which key was pressed.
-    var userGuess = $(this).val();
+    // Determines which button was pressed.
+    const userGuess = $(this).val();
     console.log(userGuess);
 
     // Randomly chooses a choice from the options array. This is the Computer's guess.
-    var computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
+    let computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
 
     // This logic determines the outcome of the game (win/loss/tie), and increments the appropriate number
     if ((userGuess === "r") || (userGuess === "p") || (userGuess === "s")) {
@@ -167,12 +167,12 @@ $(".btn-secondary").on("click",function (event) {
             initialWins++;
         } else if (userGuess === computerGuess) {
             initialTies++;
-            alert("tied, this round will restart");
+            alert("Tied, this round will restart");
         } else {
             initialLosses++;
         }
 
-        // Hide the directions
+        // Change the directions to viewer count
         directionsText.textContent = "2 people are currently watching your match! Don't let them down!";
 
         // Display the user and computer guesses, and wins/losses/ties.
@@ -182,13 +182,13 @@ $(".btn-secondary").on("click",function (event) {
         p2WinIs.textContent = initialLosses;
     }
     database.ref("/player1Info").set({
-        p1Name: p1NameInput,
+
         p1Win: initialWins
     });
-   
+
     p2NameInput = $("#p2Id-input").val().trim();
     database.ref("/player2Info").set({
-        p2Name: p2NameInput,
+
         p2Win: initialLosses
     });
 });
