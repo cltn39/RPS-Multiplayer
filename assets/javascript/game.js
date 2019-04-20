@@ -19,15 +19,15 @@ var computerChoices = ["r", "p", "s"];
 let initialWins = 0;
 let initialLosses = 0;
 let initialTies = 0;
-let p1Name = "Rockonly360noScope"
+let p1Name = "Player 1"
 let p1Win = initialWins;
-let p2Name = "NoobWith2fingers"
+let p2Name = "Player 2"
 let p2Win = initialWins;
 
 //firewatcher
 database.ref("/player1Info").on("value", function (snapshot) {
     // If Firebase has a p1Name and p1Win stored (first case)
-    if (snapshot.child("p1Name").exists()) {
+    if (snapshot.child("p1Name").exists() ) {
 
         // Set the local variables for player 1 info equal to the stored values in firebase.
         p1Name = snapshot.val().p1Name;
@@ -51,8 +51,8 @@ database.ref("/player1Info").on("value", function (snapshot) {
 
         // Print the local data to the console.
         console.log("local player 1 information:");
-        console.log(p1Name);
-        console.log(p1Win);
+        console.log("player1 name:" + p1Name);
+        console.log("player1 win:" + p1Win);
     }
 }, function (errorObject) {
     console.log("The read failed: " + errorObject.code);
@@ -61,7 +61,7 @@ database.ref("/player1Info").on("value", function (snapshot) {
 //firewatcher
 database.ref("/player2Info").on("value", function (snapshot) {
     // If Firebase has a p1Name and p1Win stored (first case)
-    if (snapshot.child("p2Name").exists()) {
+    if (snapshot.child("p2Name").exists() ) {
 
         // Set the local variables for player 1 info equal to the stored values in firebase.
         p2Name = snapshot.val().p2Name;
@@ -80,13 +80,13 @@ database.ref("/player2Info").on("value", function (snapshot) {
     else {
 
         // Change the HTML to reflect the local value in firebase
-        $("#p2NameIs").text(p1Name);
-        $("#p2WinIs").text(p1Win);
+        $("#p2NameIs").text(p2Name);
+        $("#p2WinIs").text(p2Win);
 
         // Print the local data to the console.
-        console.log("local player 1 information:");
-        console.log(p1Name);
-        console.log(p1Win);
+        console.log("local player 2 information:");
+        console.log("player2 name:" + p2Name);
+        console.log("player2 win:" + p2Win);
     }
 }, function (errorObject) {
     console.log("The read failed: " + errorObject.code);
@@ -100,7 +100,7 @@ $("#submit-p1").on("click", function (event) {
     p1NameInput = $("#p1Id-input").val().trim();
     // Save the new data in Firebase
     database.ref("/player1Info").set({
-        p1Name: p1NameInput,
+        p1Name: p1NameInput
     });
 
     // Log the new p1 name
@@ -112,7 +112,6 @@ $("#submit-p1").on("click", function (event) {
 
     // Change the HTML to reflect the new data
     $("#p1NameIs").text(p1Name);
-    $("#p1WinIs").text(p1Win);
 
     $("#p1Id-input").val("");
 });
@@ -124,7 +123,7 @@ $("#submit-p2").on("click", function (event) {
     p2NameInput = $("#p2Id-input").val().trim();
     // Save the new data in Firebase
     database.ref("/player2Info").set({
-        p2Name: p2NameInput,
+        p2Name: p2NameInput
     });
 
     // Log the new player enter
@@ -150,10 +149,11 @@ var lossesText = document.getElementById("losses-text");
 var tiesText = document.getElementById("ties-text");
 
 // This function is run whenever the user presses a key.
-document.onkeyup = function (event) {
+$(".btn-secondary").on("click",function (event) {
 
     // Determines which key was pressed.
-    var userGuess = event.key;
+    var userGuess = $(this).val();
+    console.log(userGuess);
 
     // Randomly chooses a choice from the options array. This is the Computer's guess.
     var computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
@@ -167,12 +167,13 @@ document.onkeyup = function (event) {
             initialWins++;
         } else if (userGuess === computerGuess) {
             initialTies++;
+            alert("tied, this round will restart");
         } else {
             initialLosses++;
         }
 
         // Hide the directions
-        directionsText.textContent = "";
+        directionsText.textContent = "2 people are currently watching your match! Don't let them down!";
 
         // Display the user and computer guesses, and wins/losses/ties.
         userChoiceText.textContent = "P1=" + userGuess;
@@ -180,4 +181,14 @@ document.onkeyup = function (event) {
         p1WinIs.textContent = initialWins;
         p2WinIs.textContent = initialLosses;
     }
-};
+    database.ref("/player1Info").set({
+        p1Name: p1NameInput,
+        p1Win: initialWins
+    });
+   
+    p2NameInput = $("#p2Id-input").val().trim();
+    database.ref("/player2Info").set({
+        p2Name: p2NameInput,
+        p2Win: initialLosses
+    });
+});

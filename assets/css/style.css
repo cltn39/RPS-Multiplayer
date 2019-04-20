@@ -4,7 +4,7 @@ body{
     background-repeat: no-repeat; 
     background-size: cover; 
 }
-.bg {
+.custom-container {
     background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTckZAJuPjylvx4qpa0oUmlAVBW_G074g5BQcqSS79w1W6yOLVyiw");
     height: 100%;
     background-position: center;
@@ -23,3 +23,23 @@ h5{
     text-shadow: 2px 2px rgb(15, 15, 15);
     font-family: 'Luckiest Guy', cursive;
 }
+  .custom-card {
+       margin-top: 20px;
+        margin-bottom: 20px;
+      background-color: rgba(0,0,0,0.3);
+        -moz-transition: box-shadow 0.4s ease;
+      -webkit-transition: box-shadow 0.4s ease;
+      -o-transition: box-shadow 0.4s ease;
+      -ms-transition: box-shadow 0.4s ease;
+      transition: box-shadow 0.4s ease;
+      -moz-box-shadow: 0 35px 30px -30px rgba(0,0,0,0.4);
+      -webkit-box-shadow: 0 35px 30px -30px rgba(0,0,0,0.4);
+      -o-box-shadow: 0 35px 30px -30px rgba(0,0,0,0.4);
+      -ms-box-shadow: 0 35px 30px -30px rgba(0,0,0,0.4);
+      box-shadow: 0 35px 30px -30px rgba(0,0,0,0.4);
+  }
+  
+      .custom-card:hover {
+         box-shadow: 0 14px 28px rgba(0,0,0,1), 0 10px 10px rgba(0,0,0,0.82);
+        }
+      

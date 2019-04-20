@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -23,15 +25,22 @@
             <hr class="my-4">
             <p>Both player 1 and player 2 must be present for the game to start</p>
             <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+            <br><br><br>
+            <div>
+                <span class="badge-pill badge-primary"><i class="fab fa-facebook-f" aria-hidden="true"></i></span>
+                <span class="badge-pill badge-info"><i class="fab fa-instagram" aria-hidden="true"></i></span>
+                <span class="badge-pill badge-warning"><i class="fab fa-github"></i></span>
+                <span class="badge-pill badge-light"><i class="fab fa-linkedin"></i></span>
+            </div>
         </div>
-        <div class="card bg">
+        <div class="container-fluid custom-container">
             <div class="card-header bg_header">
                 <p id="directions-text" style="color:azure">Press r, p or s to start playing!</p>
             </div>
             <div class="row">
                 <div class="col-sm-4">
                     <div class="card-body">
-                        <div class="card"
+                        <div class="card custom-card"
                             style="width: 18rem; background-image: url(https://images-na.ssl-images-amazon.com/images/I/61-2Earg8eL._SX425_.jpg);">
                             <img src="https://cdn2.iconfinder.com/data/icons/picons-basic-2/57/basic2-103_user_people_man-512.png"
                                 class="card-img-top" alt="player_1">
@@ -42,12 +51,16 @@
                                     <li class="list-group-item">User ID: <span id="p1NameIs"></span></li>
                                     <li class="list-group-item">Wins: <span id="p1WinIs"></span></li>
                                     <li class="list-group-item">
-                                        <form>
-                                            <label for="p1Id-input">Enter ID</label>
-                                            <input class="form-control" id="p1Id-input" type="text">
-                                            <button class="btn btn-primary" id="submit-p1" type="submit">Submit</button>
-                                        </form>
+                                        <label for="p1Id-input" class="sr-only">Enter ID</label>
+                                        <input class="col-sm-7" id="p1Id-input" type="text" placeholder="Enter ID">
+                                        <button class="btn btn-primary btn-sm float-right" id="submit-p1"
+                                            type="submit">Submit</button>
                                     </li>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-secondary" value="r"><i class="far fa-hand-rock"></i></button>
+                                        <button type="button" class="btn btn-secondary" value="p"><i class="far fa-hand-paper"></i></button>
+                                        <button type="button" class="btn btn-secondary" value="s"><i class="far fa-hand-scissors"></i></button>
+                                    </div>
                                 </ul>
                             </div>
                         </div>
@@ -60,6 +73,7 @@
                         <div class="col-sm-6">
                             <div class="card">
                                 <div class="card-body">
+                                    <img src="./assets/image/sissor.png" style="width: 7rem">
                                     <p class="card-text">
                                         <p id="userchoice-text"></p>
                                     </p>
@@ -69,6 +83,7 @@
                         <div class="col-sm-6">
                             <div class="card">
                                 <div class="card-body">
+                                    <img src="./assets/image/rock.png" style="width: 7rem">
                                     <p class="card-text">
                                         <p id="computerchoice-text"></p>
                                     </p>
@@ -79,7 +94,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="card-body">
-                        <div class="card"
+                        <div class="card custom-card"
                             style="width: 18rem; background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREtPU2JIKKshfzVL5CTfWbuDcqD4AwR_s_QUHBxpbtcxbrOkXE);">
                             <img src="https://cdn2.iconfinder.com/data/icons/picons-basic-2/57/basic2-103_user_people_man-512.png"
                                 class="card-img-top" alt="player_2">
@@ -90,12 +105,19 @@
                                     <li class="list-group-item">User ID: <span id="p2NameIs"></span></li>
                                     <li class="list-group-item">Wins: <span id="p2WinIs"></span></li>
                                     <li class="list-group-item">
-                                        <form>
-                                            <label for="p2Id-input">Enter ID</label>
-                                            <input class="form-control" id="p2Id-input" type="text">
-                                            <button class="btn btn-primary" id="submit-p2" type="submit">Submit</button>
-                                        </form>
+                                        <label for="p2Id-input" class="sr-only">Enter ID</label>
+                                        <input class="col-sm-7" id="p2Id-input" type="text" placeholder="Enter ID">
+                                        <button class="btn btn-primary btn-sm float-right" id="submit-p2"
+                                            type="submit">Submit</button>
                                     </li>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button name="subject" type="submit" class="btn btn-secondary"
+                                            value="r"><i class="far fa-hand-rock"></i></button>
+                                        <button name="subject" type="submit" class="btn btn-secondary"
+                                            value="p"><i class="far fa-hand-paper"></i></button>
+                                        <button name="subject" type="submit" class="btn btn-secondary"
+                                            value="s"><i class="far fa-hand-scissors"></i></button>
+                                    </div>
                                 </ul>
                             </div>
                         </div>
@@ -103,9 +125,24 @@
                 </div>
             </div>
         </div>
-        <div>
-            <!-- <p id="ties-text"></p> -->
+        <br>
+        <div class="card">
+            <div class="card-header">
+                Chat
+            </div>
+            <div class="card-body">
+                <div class="list-messages" id="listMessages">
+                    <ul><span id="ties-text"></span></ul>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                <div class="new-message clearfix" id="newMessage">
+                    <input class="col-lg-11" type="text" name="text" placeholder="start your chat..">
+                    <button class="btn btn-primary btn-sm float-right" id="chatbutton" type="submit">Send</button>
+                </div>
+            </div>
         </div>
+
     </div>
     <script src="assets/javascript/game.js"></script>
 </body>
