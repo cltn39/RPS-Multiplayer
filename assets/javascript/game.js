@@ -167,7 +167,6 @@ $(".btn-secondary").on("click", function (event) {
             initialWins++;
         } else if (userGuess === computerGuess) {
             initialTies++;
-            alert("Tied, this round will restart");
         } else {
             initialLosses++;
         }
@@ -178,17 +177,37 @@ $(".btn-secondary").on("click", function (event) {
         // Display the user and computer guesses, and wins/losses/ties.
         userChoiceText.textContent = "P1=" + userGuess;
         computerChoiceText.textContent = "P2=" + computerGuess;
+        //store wins for each players into firebase
+        database.ref("/player1Info").set({
+            p1Win: initialWins
+        });
+        
+        p2NameInput = $("#p2Id-input").val().trim();
+        database.ref("/player2Info").set({
+            p2Win: initialLosses
+        });
+        //locally store and display win count 
         p1WinIs.textContent = initialWins;
         p2WinIs.textContent = initialLosses;
     }
-    database.ref("/player1Info").set({
-
-        p1Win: initialWins
-    });
-
-    p2NameInput = $("#p2Id-input").val().trim();
-    database.ref("/player2Info").set({
-
-        p2Win: initialLosses
-    });
+    //display RPS imgs to represnt choices
+    if (userGuess === "r") {
+        $("#playerOneRpsImg").append(`<img src="./assets/image/rock.png" style="width: 7rem">`);
+    }
+    if (userGuess === "p") {
+        $("#playerOneRpsImg").append(`<img src="./assets/image/paper.png" style="width: 7rem">`);
+    }
+    if (userGuess === "s") {
+        $("#playerOneRpsImg").append(`<img src="./assets/image/sissor.png" style="width: 7rem">`);
+    }
+    if (computerGuess === "r") {
+        $("#playerTwoRpsImg").append(`<img src="./assets/image/rock.png" style="width: 7rem">`);
+    }
+    if (computerGuess === "p") {
+        $("#playerTwoRpsImg").append(`<img src="./assets/image/paper.png" style="width: 7rem">`);
+    }
+    if (computerGuess === "s") {
+        $("#playerTwoRpsImg").append(`<img src="./assets/image/sissor.png" style="width: 7rem">`);
+    }
+    
 });
