@@ -11,6 +11,9 @@ firebase.initializeApp(config);
 
 // Create a variable to reference the database.
 const database = firebase.database();
+let playerDatabase = database.ref("/players");
+let chatDatabase = database.ref("/chat");
+let connectedDatabase = database.ref(".info/connected");
 
 // Creates an array that lists out all of the options (Rock, Paper, or Scissors).
 const computerChoices = ["r", "p", "s"];
@@ -19,10 +22,71 @@ const computerChoices = ["r", "p", "s"];
 let initialWins = 0;
 let initialLosses = 0;
 let initialTies = 0;
+// local player data
+let playerName;
+let player1LoggedIn = false;
+let player2LoggedIn = false;
+let playerNumber;
+let playerObject;
+let player1Object = {
+    name: "",
+    choice: "",
+    wins: 0,
+    losses: 0
+}
+let player2Object = {
+    name: "",
+    choice: "",
+    wins: 0,
+    losses: 0
+}
+let resetId;
+
 let p1Name = "Player 1"
 let p1Win = initialWins;
 let p2Name = "Player 2"
 let p2Win = initialWins;
+
+// when the login button is clicked, add the new player to the open player slot
+$("#loginBtn").click(function (event) {
+    event.preventDefault();
+
+    // check to see which player slot is available
+    if (!player1LoggedIn) {
+        playerNumber = 1;
+        playerObject = player1Object;
+    }
+    else if (!player2LoggedIn) {
+        playerNumber = 2;
+        playerObject = player2Object;
+    }
+    else {
+        playerNumber = null;
+        playerObject = null;
+    }
+
+    // if a slot was found, update it with the new information
+    if (playerNumber === 1 || playerNumber === 2) {
+        playerName = $("#player-name-input").val().trim();
+        playerObject.name = playerName;
+        $("#player-name-input").val("");
+
+        $("#player-name-display").text(playerName);
+        $("#player-number").text(playerNumber);
+
+        database.ref(`/players/${playerNumber}`).set(playerObject);
+        database.ref(`/players/${playerNumber}`).onDisconnect().remove();
+    }
+});
+
+// when a selection is made, send it to the database
+$(".selection").click(function () {
+    playerObject.choice = this.id;
+    database.ref("/players/" + playerNumber).set(playerObject);
+
+    $(".p" + playerNumber + "-selections").hide();
+    $(".p" + playerNumber + "-selection-reveal").text(this.id).show();
+});
 
 //firewatcher
 database.ref("/player1Info").on("value", function (snapshot) {
@@ -179,13 +243,13 @@ $(".btn-secondary").on("click", function (event) {
         // computerChoiceText.textContent = "P2=" + computerGuess;
         //store wins for each players into firebase
         database.ref("/player1WinInfo").set({
-            
+
             p1Win: initialWins
         });
-        
+
         p2NameInput = $("#p2Id-input").val().trim();
         database.ref("/player2WinInfo").set({
-           
+
             p2Win: initialLosses
         });
         //locally store and display win count 
@@ -211,5 +275,5 @@ $(".btn-secondary").on("click", function (event) {
     if (computerGuess === "s") {
         $("#playerTwoRpsImg").append(`<img src="./assets/image/sissor.png" id="hideMe" style="width: 7rem; -webkit-transform: scaleX(-1); transform: scaleX(-1)">`);
     }
-    
+
 });
