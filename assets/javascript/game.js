@@ -84,8 +84,8 @@ $(".selection").click(function () {
     playerObject.choice = this.id;
     database.ref("/players/" + playerNumber).set(playerObject);
 
-    $(".p" + playerNumber + "-selections").hide();
-    $(".p" + playerNumber + "-selection-reveal").text(this.id).show();
+    $(`.p ${playerNumber}-selections`).hide();
+    $(`.p ${playerNumber}-selection-reveal`).text(this.id).show();
 });
 
 //firewatcher
@@ -247,11 +247,11 @@ $(".btn-secondary").on("click", function (event) {
             p1Win: initialWins
         });
 
-        p2NameInput = $("#p2Id-input").val().trim();
-        database.ref("/player2WinInfo").set({
+        // p2NameInput = $("#p2Id-input").val().trim();
+        // database.ref("/player2WinInfo").set({
 
-            p2Win: initialLosses
-        });
+        //     p2Win: initialLosses
+        // });
         //locally store and display win count 
         p1WinIs.textContent = initialWins;
         p2WinIs.textContent = initialLosses;

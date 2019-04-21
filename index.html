@@ -41,9 +41,10 @@
                 <div class="col-sm-12 pre-login">
                     <form role="login">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="player-name" placeholder="Enter your name to start...">
+                            <input type="text" class="form-control" id="player-name-input"
+                                placeholder="Enter your name to start...">
                             <span class="input-group-btn">
-                                <button class="btn btn-primary" id="login" type="submit">Login</button>
+                                <button class="btn btn-primary" id="loginBtn" type="submit">Login</button>
                             </span>
                         </div>
                     </form>
@@ -77,17 +78,25 @@
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">User ID: <span id="p1NameIs"></span></li>
                                     <li class="list-group-item">Wins: <span id="p1WinIs"></span></li>
-                                    <li class="list-group-item">
-                                        <label for="p1Id-input" class="sr-only">Enter ID</label>
-                                        <input class="col-sm-7" id="p1Id-input" type="text" placeholder="Enter ID">
-                                        <button class="btn btn-primary btn-sm float-right" id="submit-p1"
-                                            type="submit">Submit</button>
-                                    </li>
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-secondary" value="r"><i class="far fa-hand-rock"></i></button>
-                                        <button type="button" class="btn btn-secondary" value="p"><i class="far fa-hand-paper"></i></button>
-                                        <button type="button" class="btn btn-secondary" value="s"><i class="far fa-hand-scissors"></i></button>
+                                        <button id="rock" type="button" class="btn btn-secondary selection" value="r"><i
+                                                class="far fa-hand-rock"></i></button>
+                                        <button id="paper" type="button" class="btn btn-secondary selection" value="p"><i
+                                                class="far fa-hand-paper"></i></button>
+                                        <button id="scissors" type="button" class="btn btn-secondary selection" value="s"><i
+                                                class="far fa-hand-scissors"></i></button>
                                     </div>
+                                    <li class="list-group-item">
+                                        <p class="pending-selection p1-pending-selection">
+                                            Pending Selection
+                                        </p>
+                                        <p class="selection-made p1-selection-made">
+                                            Selection Made.
+                                        </p>
+                                        <p class="selection-reveal p1-selection-reveal">
+
+                                        </p>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -99,7 +108,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="card">
-                                <div class="card-body" id="playerOneRpsImg">        
+                                <div class="card-body" id="playerOneRpsImg">
                                     <p class="card-text">
                                         <p id="userchoice-text"></p>
                                     </p>
@@ -108,7 +117,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="card">
-                                <div class="card-body" id="playerTwoRpsImg">                              
+                                <div class="card-body" id="playerTwoRpsImg">
                                     <p class="card-text">
                                         <p id="computerchoice-text"></p>
                                     </p>
@@ -129,20 +138,25 @@
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">User ID: <span id="p2NameIs"></span></li>
                                     <li class="list-group-item">Wins: <span id="p2WinIs"></span></li>
-                                    <li class="list-group-item">
-                                        <label for="p2Id-input" class="sr-only">Enter ID</label>
-                                        <input class="col-sm-7" id="p2Id-input" type="text" placeholder="Enter ID">
-                                        <button class="btn btn-primary btn-sm float-right" id="submit-p2"
-                                            type="submit">Submit</button>
-                                    </li>
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button name="subject" type="submit" class="btn btn-secondary"
-                                            value="r"><i class="far fa-hand-rock"></i></button>
-                                        <button name="subject" type="submit" class="btn btn-secondary"
-                                            value="p"><i class="far fa-hand-paper"></i></button>
-                                        <button name="subject" type="submit" class="btn btn-secondary"
-                                            value="s"><i class="far fa-hand-scissors"></i></button>
+                                        <button id="rock" type="submit" class="btn btn-secondary selection" value="r"><i
+                                                class="far fa-hand-rock"></i></button>
+                                        <button id="paper" type="submit" class="btn btn-secondary selection" value="p"><i
+                                                class="far fa-hand-paper"></i></button>
+                                        <button id="scissors" type="submit" class="btn btn-secondary selection" value="s"><i
+                                                class="far fa-hand-scissors"></i></button>
                                     </div>
+                                    <li class="list-group-item">
+                                        <p class="pending-selection p2-pending-selection">
+                                            Pending Selection
+                                        </p>
+                                        <p class="selection-made p2-selection-made">
+                                            Selection Made.
+                                        </p>
+                                        <p class="selection-reveal p2-selection-reveal">
+
+                                        </p>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
