@@ -32,136 +32,109 @@ var playerName,
         name: "",
         choice: "",
         wins: 0,
-        losses: 0
+        losses: 0,
+        ties: 0
     },
     player2Object = {
         name: "",
         choice: "",
         wins: 0,
-        losses: 0
+        losses: 0,
+        ties: 0
     },
     resetId;
 
-var p1Name = "Player 1"
-var p1Win = initialWins;
-var p2Name = "Player 2"
-var p2Win = initialWins;
-
-//firewatcher
-database.ref("/player1Info").on("value", function (snapshot) {
-    // If Firebase has a p1Name and p1Win stored (first case)
-    if (snapshot.child("p1Name").exists()) {
-
-        // Set the local variables for player 1 info equal to the stored values in firebase.
-        p1Name = snapshot.val().p1Name;
-        p1Win = parseInt(snapshot.val().p1Win);
-
-        // change the HTML to reflect the newly updated local values (most recent information from firebase)
-        $("#p1NameIs").text(snapshot.val().p1Name);
-        $("#p1WinIs").text(snapshot.val().p1Win);
-
-        // Print the local data to the console.
-        console.log(snapshot.val().p1Name);
-        console.log(snapshot.val().p1Win);
-    }
-
-    // Else Firebase doesn't have a player 1 info, so use the initial local values.
-    else {
-
-        // Change the HTML to reflect the local value in firebase
-        $("#p1NameIs").text(p1Name);
-        $("#p1WinIs").text(p1Win);
-
-        // Print the local data to the console.
-        console.log("local player 1 information:");
-        console.log("player1 name:" + p1Name);
-        console.log("player1 win:" + p1Win);
-    }
-}, function (errorObject) {
-    console.log("The read failed: " + errorObject.code);
-});
-
-//firewatcher
-database.ref("/player2Info").on("value", function (snapshot) {
-    // If Firebase has a p1Name and p1Win stored (first case)
-    if (snapshot.child("p2Name").exists()) {
-
-        // Set the local variables for player 1 info equal to the stored values in firebase.
-        p2Name = snapshot.val().p2Name;
-        p2Win = parseInt(snapshot.val().p2Win);
-
-        // change the HTML to reflect the newly updated local values (most recent information from firebase)
-        $("#p2NameIs").text(snapshot.val().p2Name);
-        $("#p2WinIs").text(snapshot.val().p2Win);
-
-        // Print the local data to the console.
-        console.log(snapshot.val().p2Name);
-        console.log(snapshot.val().p2Win);
-    }
-
-    // Else Firebase doesn't have a player 1 info, so use the initial local values.
-    else {
-
-        // Change the HTML to reflect the local value in firebase
-        $("#p2NameIs").text(p2Name);
-        $("#p2WinIs").text(p2Win);
-
-        // Print the local data to the console.
-        console.log("local player 2 information:");
-        console.log("player2 name:" + p2Name);
-        console.log("player2 win:" + p2Win);
-    }
-}, function (errorObject) {
-    console.log("The read failed: " + errorObject.code);
-});
-
-// Whenever a user clicks the submit-p1 button
-$("#submit-p1").on("click", function (event) {
+// when the login button is clicked, add the new player to the open player slot
+$("#loginBtn").click(function (event) {
     event.preventDefault();
 
-    // Get the input values
-    p1NameInput = $("#p1Id-input").val().trim();
-    // Save the new data in Firebase
-    // database.ref("/player1Info").set({
-    //     p1Name: p1NameInput
-    // });
+    // check to see which player slot is available
+    if (!player1LoggedIn) {
+        playerNumber = "1";
+        playerObject = player1Object;
+    }
+    else if (!player2LoggedIn) {
+        playerNumber = "2";
+        playerObject = player2Object;
+    }
+    else {
+        playerNumber = null;
+        playerObject = null;
+    }
 
-    // Log the new p1 name
-    console.log("New player 1 has entered the arena!");
-    console.log(p1Name);
+    // if a slot was found, update it with the new information
+    if (playerNumber) {
+        playerName = $("#player-name-input").val().trim();
+        playerObject.name = playerName;
+        $("#player-name-input").val("");
 
-    // Store the new name as a local variable (could have also used the Firebase variable)
-    p1Name = p1NameInput;
+        $("#player-name-display").text(playerName);
+        $("#player-number").text(playerNumber);
 
-    // Change the HTML to reflect the new data
-    $("#p1NameIs").text(p1Name);
-
-    $("#p1Id-input").val("");
+        database.ref("/players/" + playerNumber).set(playerObject);
+        database.ref("/players/" + playerNumber).onDisconnect().remove();
+    }
 });
 
-$("#submit-p2").on("click", function (event) {
-    event.preventDefault();
+// when player is added, update respective loggedIn flag and playerObject
+playerDatabase.on("child_added", function (childSnap) {
+    window["player" + childSnap.key + "LoggedIn"] = true;
+    window["player" + childSnap.key + "Object"] = childSnap.val();
+}, errorHandler);
 
-    // Get the input values
-    p2NameInput = $("#p2Id-input").val().trim();
-    // Save the new data in Firebase
-    // database.ref("/player2Info").set({
-    //     p2Name: p2NameInput
-    // });
+// when player is changed, update respective playerObject and stats
+playerDatabase.on("child_changed", function (childSnap) {
+    window["player" + childSnap.key + "Object"] = childSnap.val();
 
-    // Log the new player enter
-    console.log("New player 2 has entered the arena!");
-    console.log(p1Name);
+    updateStats();
+}, errorHandler);
 
-    // Store the new name as a local variable (could have also used the Firebase variable)
-    p2Name = p2NameInput;
+// when player is removed, reset respective playerObject and loggedIn flag
+playerDatabase.on("child_removed", function (childSnap) {
+    chatDatabase.push({
+        userId: "system",
+        text: childSnap.val().name + " has disconnected"
+    });
 
-    // Change the HTML to reflect the new data
-    $("#p2NameIs").text(p2Name);
-    $("#p2WinIs").text(p2Win);
+    window["player" + childSnap.key + "LoggedIn"] = false;
+    window["player" + childSnap.key + "Object"] = {
+        name: "",
+        choice: "",
+        wins: 0,
+        losses: 0
+    };
 
-    $("#p2Id-input").val("");
-});
+    // when both players have left, clear the chat
+    if (!player1LoggedIn && !player2LoggedIn) {
+        chatRef.remove();
+    }
+}, errorHandler);
+
+// when general changes are made, perform bulk of game logic
+playerDatabase.on("value", function (snap) {
+    // update the player names
+    $("#p1NameIs").text(player1Object.name || "Player 1");
+    $("#p2NameIs").text(player2Object.name || "Player 2");
+
+    // update which part of the player box is showing based on whether a selection has been made
+    updatePlayerBox("1", snap.child("1").exists(), snap.child("1").exists() && snap.child("1").val().choice);
+    updatePlayerBox("2", snap.child("2").exists(), snap.child("2").exists() && snap.child("2").val().choice);
+
+    // display correct "screen" depending on logged in statuses
+    if (player1LoggedIn && player2LoggedIn && !playerNumber) {
+        loginPending();
+    } else if (playerNumber) {
+        showLoggedInScreen();
+    } else {
+        showLoginScreen();
+    }
+
+    // if both players have selected their choice, perform the comparison
+    if (player1Object.choice && player2Object.choice) {
+        rps(player1Object.choice, player2Object.choice);
+    }
+
+}, errorHandler);
 
 // Create variables that hold references to the places in the HTML where we want to display things.
 const directionsText = document.getElementById("directions-text");
@@ -195,16 +168,16 @@ $(".btn-secondary").on("click", function (event) {
         }
 
         // Change the directions to viewer count
-        directionsText.textContent = "2 people are currently watching your match! Don't var them down!";
+        directionsText.textContent = "2 people are currently watching your match! Don't let them down!";
 
         // Display the user and computer guesses, and wins/losses/ties.
         // userChoiceText.textContent = "P1=" + userGuess;
         // computerChoiceText.textContent = "P2=" + computerGuess;
         //store wins for each players into firebase
-        database.ref("/player1WinInfo").set({
+        // database.ref("/player1WinInfo").set({
 
-            p1Win: initialWins
-        });
+        //     p1Win: initialWins
+        // });
 
         // p2NameInput = $("#p2Id-input").val().trim();
         // database.ref("/player2WinInfo").set({
@@ -212,8 +185,8 @@ $(".btn-secondary").on("click", function (event) {
         //     p2Win: initialLosses
         // });
         //locally store and display win count 
-        p1WinIs.textContent = initialWins;
-        p2WinIs.textContent = initialLosses;
+        // p1WinIs.textContent = initialWins;
+        // p2WinIs.textContent = initialLosses;
     }
     //display RPS imgs to represnt choices
     if (userGuess === "r") {
@@ -236,9 +209,64 @@ $(".btn-secondary").on("click", function (event) {
     }
 
 });
+/**
+ * Update the player box state
+ * @param {string} playerNum 1 or 2
+ * @param {boolean} exists 
+ * @param {boolean} choice 
+ */
+function updatePlayerBox(playerNum, exists, choice) {
+    if (exists) {
+        if (playerNumber != playerNum) {
+            if (choice) {
+                $(".p" + playerNum + "-selection-made").show();
+                $(".p" + playerNum + "-pending-selection").hide();
+            } else {
+                $(".p" + playerNum + "-selection-made").hide();
+                $(".p" + playerNum + "-pending-selection").show();
+            }
+        }
+    } else {
+        $(".p" + playerNum + "-selection-made").hide();
+        $(".p" + playerNum + "-pending-selection").hide();
+    }
+}
+
 //error hanler function
 function errorHandler(error) {
     console.log("Error:", error.code);
+}
+
+//#region Display functions
+
+function loginPending() {
+    $(".pre-connection, .pre-login, .post-login, .selections").hide();
+    $(".pending-login").show();
+}
+
+function showLoginScreen() {
+    $(".pre-connection, .pending-login, .post-login, .selections").hide();
+    $(".pre-login").show();
+}
+
+function showLoggedInScreen() {
+    $(".pre-connection, .pre-login, .pending-login").hide();
+    $(".post-login").show();
+    if (playerNumber == "1") {
+        $(".p1-selections").show();
+    } else {
+        $(".p1-selections").hide();
+    }
+    if (playerNumber == "2") {
+        $(".p2-selections").show();
+    } else {
+        $(".p2-selections").hide();
+    }
+}
+
+function showSelections() {
+    $(".selections, .pending-selection, .selection-made").hide();
+    $(".selection-reveal").show();
 }
 
 // Chat system
@@ -281,8 +309,8 @@ $("#send-chat").click(function (e) {
     e.preventDefault();
 
     chatDatabase.push({
-        userId: "testUserId1", // playerNumber,
-        name: "testName", //playerName,
+        userId: playerNumber,
+        name: playerName,
         text: $("#chat").val().trim()
     });
 

@@ -1,21 +1,21 @@
 # RPS-Multiplayer
 Week6_HW_Challenge
--Soon to be multiplayer rock paper scissor game
+-multiplayer rock | paper | scissor game
 -Currently set to play against computer
 ## What I used
 
-this game was built using jQuery& Javascript, HTML5, CSS3, googlefont, fontawesome, and bootstrap.
+this game was built using jQuery & Javascript, HTML5, CSS3 & bootstrap, googlefont, fontawesome.
 
 Data persistency was achieved by firebase.
 
 ##Additional features:
-
+- As a user, you will now dynamically take empty player slot after logging in. (4/24/2019 update)
 - As a user, you can send public messages to others in chatbox. (4/24/2019 update)
-- you can now click RPS buttons and image will pop up to represent the button. (4/18/2019 update)
+- user-friendly UI of Rock|paper|scissor. (4/18/2019 update)
 
 ##Upcoming changes:
- Currently game is not ##Multiplayer game, however the feature will be updated as soon as possible.
- Currently chat name is all set to testName and unable to uniquely id messenger. This will be address after multiplayer functionality has been added.
+ While waiting for player to join, you can play against computer.
+ Chat log do not clear itself at the moment. log will be disappear after certain time.
  Viewercount is currently not working, however it will be soon updated.
 
 ## Demo:
