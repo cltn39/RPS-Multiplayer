@@ -1,5 +1,5 @@
 // Initialize Firebase
-const config = {
+var config = {
     apiKey: "AIzaSyBVm0go9PSlCykzEZDF2y2EOAGIzTeBlOo",
     authDomain: "rps-multiplayer-fd7e2.firebaseapp.com",
     databaseURL: "https://rps-multiplayer-fd7e2.firebaseio.com",
@@ -10,83 +10,42 @@ const config = {
 firebase.initializeApp(config);
 
 // Create a variable to reference the database.
-const database = firebase.database();
-let playerDatabase = database.ref("/players");
-let chatDatabase = database.ref("/chat");
-let connectedDatabase = database.ref(".info/connected");
+var database = firebase.database();
+var playerDatabase = database.ref("/players");
+var chatDatabase = database.ref("/chat");
+var connectedDatabase = database.ref(".info/connected");
 
 // Creates an array that lists out all of the options (Rock, Paper, or Scissors).
 const computerChoices = ["r", "p", "s"];
 
 //initial values
-let initialWins = 0;
-let initialLosses = 0;
-let initialTies = 0;
+var initialWins = 0;
+var initialLosses = 0;
+var initialTies = 0;
 // local player data
-let playerName;
-let player1LoggedIn = false;
-let player2LoggedIn = false;
-let playerNumber;
-let playerObject;
-let player1Object = {
-    name: "",
-    choice: "",
-    wins: 0,
-    losses: 0
-}
-let player2Object = {
-    name: "",
-    choice: "",
-    wins: 0,
-    losses: 0
-}
-let resetId;
+var playerName,
+    player1LoggedIn = false,
+    player2LoggedIn = false,
+    playerNumber,
+    playerObject,
+    player1Object = {
+        name: "",
+        choice: "",
+        wins: 0,
+        losses: 0
+    },
+    player2Object = {
+        name: "",
+        choice: "",
+        wins: 0,
+        losses: 0
+    },
+    resetId;
 
-let p1Name = "Player 1"
-let p1Win = initialWins;
-let p2Name = "Player 2"
-let p2Win = initialWins;
-
-// when the login button is clicked, add the new player to the open player slot
-$("#loginBtn").click(function (event) {
-    event.preventDefault();
-
-    // check to see which player slot is available
-    if (!player1LoggedIn) {
-        playerNumber = 1;
-        playerObject = player1Object;
-    }
-    else if (!player2LoggedIn) {
-        playerNumber = 2;
-        playerObject = player2Object;
-    }
-    else {
-        playerNumber = null;
-        playerObject = null;
-    }
-
-    // if a slot was found, update it with the new information
-    if (playerNumber === 1 || playerNumber === 2) {
-        playerName = $("#player-name-input").val().trim();
-        playerObject.name = playerName;
-        $("#player-name-input").val("");
-
-        $("#player-name-display").text(playerName);
-        $("#player-number").text(playerNumber);
-
-        database.ref(`/players/${playerNumber}`).set(playerObject);
-        database.ref(`/players/${playerNumber}`).onDisconnect().remove();
-    }
-});
-
-// when a selection is made, send it to the database
-$(".selection").click(function () {
-    playerObject.choice = this.id;
-    database.ref("/players/" + playerNumber).set(playerObject);
-
-    $(`.p ${playerNumber}-selections`).hide();
-    $(`.p ${playerNumber}-selection-reveal`).text(this.id).show();
-});
+var p1Name = "Player 1"
+var p1Win = initialWins;
+var p2Name = "Player 2"
+var p2Win = initialWins;
 
 //firewatcher
 database.ref("/player1Info").on("value", function (snapshot) {
@@ -163,9 +122,9 @@ $("#submit-p1").on("click", function (event) {
     // Get the input values
     p1NameInput = $("#p1Id-input").val().trim();
     // Save the new data in Firebase
-    database.ref("/player1Info").set({
-        p1Name: p1NameInput
-    });
+    // database.ref("/player1Info").set({
+    //     p1Name: p1NameInput
+    // });
 
     // Log the new p1 name
     console.log("New player 1 has entered the arena!");
@@ -186,9 +145,9 @@ $("#submit-p2").on("click", function (event) {
     // Get the input values
     p2NameInput = $("#p2Id-input").val().trim();
     // Save the new data in Firebase
-    database.ref("/player2Info").set({
-        p2Name: p2NameInput
-    });
+    // database.ref("/player2Info").set({
+    //     p2Name: p2NameInput
+    // });
 
     // Log the new player enter
     console.log("New player 2 has entered the arena!");
@@ -220,7 +179,7 @@ $(".btn-secondary").on("click", function (event) {
     console.log(userGuess);
 
     // Randomly chooses a choice from the options array. This is the Computer's guess.
-    let computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
+    var computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
 
     // This logic determines the outcome of the game (win/loss/tie), and increments the appropriate number
     if ((userGuess === "r") || (userGuess === "p") || (userGuess === "s")) {
@@ -236,7 +195,7 @@ $(".btn-secondary").on("click", function (event) {
         }
 
         // Change the directions to viewer count
-        directionsText.textContent = "2 people are currently watching your match! Don't let them down!";
+        directionsText.textContent = "2 people are currently watching your match! Don't var them down!";
 
         // Display the user and computer guesses, and wins/losses/ties.
         // userChoiceText.textContent = "P1=" + userGuess;
@@ -276,4 +235,56 @@ $(".btn-secondary").on("click", function (event) {
         $("#playerTwoRpsImg").append(`<img src="./assets/image/sissor.png" id="hideMe" style="width: 7rem; -webkit-transform: scaleX(-1); transform: scaleX(-1)">`);
     }
 
+});
+//error hanler function
+function errorHandler(error) {
+    console.log("Error:", error.code);
+}
+
+// Chat system
+
+// when a chat message is received, add it to the DOM
+chatDatabase.on("child_added", function (chatSnap) {
+    let chatObj = chatSnap.val();
+    let chatText = chatObj.text;
+    let chatLogItem = $("<li>").attr("id", chatSnap.key);
+
+    // style the message based on who sent it
+    if (chatObj.userId === "system") {
+        chatLogItem.addClass("system");
+    } else if (chatObj.userId === playerNumber) {
+        chatLogItem.addClass("current-user");
+    } else {
+        chatLogItem.addClass("other-user");
+    }
+
+    // if a username exist, prepend it to the chat text
+    if (chatObj.name) {
+        chatText = "<strong>" + chatObj.name + ":</strong> " + chatText;
+    }
+
+    chatLogItem.html(chatText);
+
+    $("#chat-log").append(chatLogItem);
+
+    // scroll to the bottom 
+    $("#chat-log").scrollTop($("#chat-log")[0].scrollHeight);
+}, errorHandler);
+
+// if a chat message is removed, remove it from the DOM
+chatDatabase.on("child_removed", function (chatSnap) {
+    $("#" + chatSnap.key).remove();
+}, errorHandler);
+
+// when the send-chat button is clicked, send the message to the database
+$("#send-chat").click(function (e) {
+    e.preventDefault();
+
+    chatDatabase.push({
+        userId: "testUserId1", // playerNumber,
+        name: "testName", //playerName,
+        text: $("#chat").val().trim()
+    });
+
+    $("#chat").val("");
 });

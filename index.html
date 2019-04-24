@@ -78,7 +78,7 @@
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">User ID: <span id="p1NameIs"></span></li>
                                     <li class="list-group-item">Wins: <span id="p1WinIs"></span></li>
-                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                    <div class="btn-group selections" role="group" aria-label="Basic example">
                                         <button id="rock" type="button" class="btn btn-secondary selection" value="r"><i
                                                 class="far fa-hand-rock"></i></button>
                                         <button id="paper" type="button" class="btn btn-secondary selection" value="p"><i
@@ -171,13 +171,14 @@
             </div>
             <div class="card-body">
                 <div class="list-messages" id="listMessages">
-                    <ul><span id="ties-text"></span></ul>
+                    <ul id="chat-log" class="list-unstyled text-left">
+                    </ul>
                 </div>
             </div>
             <div class="card-footer text-muted">
                 <div class="new-message clearfix" id="newMessage">
-                    <input class="col-lg-11" type="text" name="text" placeholder="start your chat..">
-                    <button class="btn btn-primary btn-sm float-right" id="chatbutton" type="submit">Send</button>
+                    <input class="col-lg-11" type="text" name="text" id="chat" placeholder="start your chat..">
+                    <button class="btn btn-primary btn-sm float-right" id="send-chat" type="submit">Send</button>
                 </div>
             </div>
         </div>
