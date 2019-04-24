@@ -106,7 +106,7 @@ playerDatabase.on("child_removed", function (childSnap) {
 
     // when both players have left, clear the chat
     if (!player1LoggedIn && !player2LoggedIn) {
-        chatRef.remove();
+        chatDatabase.remove();
     }
 }, errorHandler);
 
@@ -144,71 +144,137 @@ const winsText = document.getElementById("wins-text");
 const lossesText = document.getElementById("losses-text");
 const tiesText = document.getElementById("ties-text");
 
-// This function is run whenever the user presses a key.
-$(".btn-secondary").on("click", function (event) {
+// when a selection is made, send it to the database
+$(".selection").click(function () {
+    // failsafe for if the player isn't logged in
+    if (!playerNumber) return;
 
-    // Determines which button was pressed.
-    const userGuess = $(this).val();
-    console.log(userGuess);
+    playerObject.choice = this.id;
+    database.ref("/players/" + playerNumber).set(playerObject);
 
-    // Randomly chooses a choice from the options array. This is the Computer's guess.
-    var computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
-
-    // This logic determines the outcome of the game (win/loss/tie), and increments the appropriate number
-    if ((userGuess === "r") || (userGuess === "p") || (userGuess === "s")) {
-
-        if ((userGuess === "r" && computerGuess === "s") ||
-            (userGuess === "s" && computerGuess === "p") ||
-            (userGuess === "p" && computerGuess === "r")) {
-            initialWins++;
-        } else if (userGuess === computerGuess) {
-            initialTies++;
-        } else {
-            initialLosses++;
-        }
-
-        // Change the directions to viewer count
-        directionsText.textContent = "2 people are currently watching your match! Don't let them down!";
-
-        // Display the user and computer guesses, and wins/losses/ties.
-        // userChoiceText.textContent = "P1=" + userGuess;
-        // computerChoiceText.textContent = "P2=" + computerGuess;
-        //store wins for each players into firebase
-        // database.ref("/player1WinInfo").set({
-
-        //     p1Win: initialWins
-        // });
-
-        // p2NameInput = $("#p2Id-input").val().trim();
-        // database.ref("/player2WinInfo").set({
-
-        //     p2Win: initialLosses
-        // });
-        //locally store and display win count 
-        // p1WinIs.textContent = initialWins;
-        // p2WinIs.textContent = initialLosses;
-    }
-    //display RPS imgs to represnt choices
-    if (userGuess === "r") {
-        $("#playerOneRpsImg").append(`<img src="./assets/image/rock.png" id="hideMe" style="width: 7rem; -webkit-transform: scaleX(-1); transform: scaleX(-1)">`);
-    }
-    if (userGuess === "p") {
-        $("#playerOneRpsImg").append(`<img src="./assets/image/paper.png" id="hideMe" style="width: 7rem">`);
-    }
-    if (userGuess === "s") {
-        $("#playerOneRpsImg").append(`<img src="./assets/image/sissor.png" id="hideMe" style="width: 7rem">`);
-    }
-    if (computerGuess === "r") {
-        $("#playerTwoRpsImg").append(`<img src="./assets/image/rock.png" id="hideMe" style="width: 7rem">`);
-    }
-    if (computerGuess === "p") {
-        $("#playerTwoRpsImg").append(`<img src="./assets/image/paper.png" id="hideMe" style="width: 7rem; -webkit-transform: scaleX(-1); transform: scaleX(-1)">`);
-    }
-    if (computerGuess === "s") {
-        $("#playerTwoRpsImg").append(`<img src="./assets/image/sissor.png" id="hideMe" style="width: 7rem; -webkit-transform: scaleX(-1); transform: scaleX(-1)">`);
-    }
-
+    $(".p" + playerNumber + "-selections").hide();
+    $(".p" + playerNumber + "-selection-reveal").text(this.id).show();
 });
+
+function rps(p1choice, p2choice) {
+    $(".p1-selection-reveal").text(p1choice);
+    $(".p2-selection-reveal").text(p2choice);
+
+    showSelections();
+
+    if (p1choice == p2choice) {
+        //tie
+        $("#feedback").text("TIE");
+    }
+    else if ((p1choice == "rock" && p2choice == "scissors") || (p1choice == "paper" && p2choice == "rock") || (p1choice == "scissors" && p2choice == "paper")) {
+        // p1 wins
+        $("#feedback").html("<small>" + p1choice + " beats " + p2choice + "</small><br/><br/>" + player1Object.name + " wins!");
+
+        if (playerNumber == "1") {
+            playerObject.wins++;
+        } else {
+            playerObject.losses++;
+        }
+    } else {
+        // p2 wins
+        $("#feedback").html("<small>" + p2choice + " beats " + p1choice + "</small><br/><br/>" + player2Object.name + " wins!");
+
+        if (playerNumber == "2") {
+            playerObject.wins++;
+        } else {
+            playerObject.losses++;
+        }
+    }
+
+    resetId = setTimeout(reset, 3000);
+}
+
+function reset() {
+    clearTimeout(resetId);
+
+    playerObject.choice = "";
+
+    database.ref("/players/" + playerNumber).set(playerObject);
+
+    $(".selection-reveal").hide();
+    $("#feedback").empty();
+}
+
+function updateStats() {
+    ["1", "2"].forEach(playerNum => {
+        var obj = window["player" + playerNum + "Object"];
+        $("#p" + playerNum + "-WinIs").text(obj.wins);
+        $("#p" + playerNum + "-losses").text(obj.losses);
+    });
+
+    player1LoggedIn ? $(".p1-stats").show() : $(".p1-stats").hide();
+    player2LoggedIn ? $(".p2-stats").show() : $(".p2-stats").hide();
+}
+// // This function is run whenever the user presses a key.
+// $(".btn-secondary").on("click", function (event) {
+
+//     // Determines which button was pressed.
+//     const userGuess = $(this).val();
+//     console.log(userGuess);
+
+//     // Randomly chooses a choice from the options array. This is the Computer's guess.
+//     var computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
+
+//     // This logic determines the outcome of the game (win/loss/tie), and increments the appropriate number
+//     if ((userGuess === "r") || (userGuess === "p") || (userGuess === "s")) {
+
+//         if ((userGuess === "r" && computerGuess === "s") ||
+//             (userGuess === "s" && computerGuess === "p") ||
+//             (userGuess === "p" && computerGuess === "r")) {
+//             initialWins++;
+//         } else if (userGuess === computerGuess) {
+//             initialTies++;
+//         } else {
+//             initialLosses++;
+//         }
+
+//         // Change the directions to viewer count
+//         directionsText.textContent = "2 people are currently watching your match! Don't let them down!";
+
+//         // Display the user and computer guesses, and wins/losses/ties.
+//         // userChoiceText.textContent = "P1=" + userGuess;
+//         // computerChoiceText.textContent = "P2=" + computerGuess;
+//         //store wins for each players into firebase
+//         // database.ref("/player1WinInfo").set({
+
+//         //     p1Win: initialWins
+//         // });
+
+//         // p2NameInput = $("#p2Id-input").val().trim();
+//         // database.ref("/player2WinInfo").set({
+
+//         //     p2Win: initialLosses
+//         // });
+//         //locally store and display win count 
+//         // p1WinIs.textContent = initialWins;
+//         // p2WinIs.textContent = initialLosses;
+//     }
+//     //display RPS imgs to represnt choices
+//     if (userGuess === "r") {
+//         $("#playerOneRpsImg").append(`<img src="./assets/image/rock.png" id="hideMe" style="width: 7rem; -webkit-transform: scaleX(-1); transform: scaleX(-1)">`);
+//     }
+//     if (userGuess === "p") {
+//         $("#playerOneRpsImg").append(`<img src="./assets/image/paper.png" id="hideMe" style="width: 7rem">`);
+//     }
+//     if (userGuess === "s") {
+//         $("#playerOneRpsImg").append(`<img src="./assets/image/sissor.png" id="hideMe" style="width: 7rem">`);
+//     }
+//     if (computerGuess === "r") {
+//         $("#playerTwoRpsImg").append(`<img src="./assets/image/rock.png" id="hideMe" style="width: 7rem">`);
+//     }
+//     if (computerGuess === "p") {
+//         $("#playerTwoRpsImg").append(`<img src="./assets/image/paper.png" id="hideMe" style="width: 7rem; -webkit-transform: scaleX(-1); transform: scaleX(-1)">`);
+//     }
+//     if (computerGuess === "s") {
+//         $("#playerTwoRpsImg").append(`<img src="./assets/image/sissor.png" id="hideMe" style="width: 7rem; -webkit-transform: scaleX(-1); transform: scaleX(-1)">`);
+//     }
+
+// });
 /**
  * Update the player box state
  * @param {string} playerNum 1 or 2
